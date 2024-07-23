@@ -1,12 +1,17 @@
-const Player = (marker) => {
-    return marker
+const Player = (name, marker) => {
+    let playerScore = 0;
+    
+    const getPlayerScore = () => playerScore;
+    const incrementScore = () => playerScore++;
+
+    return { name, marker, getPlayerScore, incrementScore }
 }
 
 const Gameboard = (() => {
     let boardArray = [
-        ['x', 'x', 'o'],
-        ['o', 'o', 'x'],
-        ['x', 'x', 'x']
+        ['', '', ''],
+        ['', '', ''],
+        ['', '', '']
     ];
 
     const getBoard = () => boardArray;
@@ -21,9 +26,11 @@ const Gameboard = (() => {
 
     const markBoard = (index, marker) => {
         const [row, col] = index;
-        ((row >= 0 && row <= 3) && (col >= 0 && col <= 3) && (boardArray[row][col] == '')) 
-            ? (boardArray[row][col] = marker, console.table(getBoard()))    
-            : console.log('Invalid')
+        if ((row >= 0 && row < 3) && (col >= 0 && col < 3) && (boardArray[row][col] == '')) {
+            boardArray[row][col] = marker 
+            checkBoard()    
+        }
+        else console.log('Invalid')
     }
 
     const checkBoard = () => {
@@ -41,12 +48,15 @@ const Gameboard = (() => {
             [boardArray[0][2], boardArray[1][1], boardArray[2][0]]
         ]
 
-        patterns.forEach(line => {
-            (line !== '' && (line[0] === line[1]) && (line[0] === line[2]))
-                ? console.log('Winner')
-                : console.log('No winner')
-        })        
-
+        for (let i = 0; i < patterns.length; i++) {
+            const line = patterns[i];
+            if (line[0] !== '' && (line[0] === line[1]) && (line[0] === line[2])) {
+                console.log(`Winner: ${line[0]}`)
+                return;
+            }
+        }
+        console.table(getBoard()) 
+        console.log('No winner yet')     
     }
 
     console.table(getBoard())
@@ -54,6 +64,6 @@ const Gameboard = (() => {
     return { getBoard, resetBoard, markBoard, checkBoard }
 })()
 
-const Display = {
+const Display = (() => {
 
-}
+})()
