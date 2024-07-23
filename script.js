@@ -1,11 +1,12 @@
-const Player = (marker) => {
+const Player = (name, marker) => {
     let playerScore = 0
     
     const getPlayerScore = () => playerScore
     const incrementScore = () => playerScore++
     const resetScore = () => playerScore = 0
+    const getPlayerName = () => name
 
-    return { marker, getPlayerScore, incrementScore, resetScore }
+    return { getPlayerName, name, marker, getPlayerScore, incrementScore, resetScore }
 }
 
 const Gameboard = (() => {
@@ -68,13 +69,17 @@ const Gameboard = (() => {
 
 const Display = (() => {
 
-    const x = Player('X')
-    const o = Player('O')
+    const getPlayerOneName = () => document.querySelector('#player1').value;
+    const getPlayerTwoName = () => document.querySelector('#player2').value;
 
-    let activePlayer = x
+    const playerOne = Player(getPlayerOneName(), 'X')
+    const playerTwo = Player(getPlayerTwoName(), 'O')
+
+    let activePlayer = playerOne
     let isOver = false
     let roundNumber = 1
     let tieNum = 0
+
 
     // cache DOM
     const boxes = document.querySelectorAll('.box')
@@ -83,9 +88,37 @@ const Display = (() => {
     const playerO = document.querySelector('.playerO')
     const xScore = playerX.querySelector('.score')
     const oScore = playerO.querySelector('.score')
+    const p1NameHolder = playerX.querySelector('.text')
+    const p2NameHolder = playerO.querySelector('.text')
     const ties = document.querySelector('.ties .score')
     const continueRoundBtn = document.querySelector('.continue-btn')
     const resetBtn = document.querySelector('.reset-btn')
+    const confirmBtn = document.querySelector('.confirm-btn')
+    const modal = document.querySelector('#modal')
+    const inputs = document.querySelectorAll('input')
+
+    confirmBtn.addEventListener('click', (e) => addPlayers(e))
+
+    const addPlayers = (e) => {
+        e.preventDefault()
+
+        const playerOneName = getPlayerOneName()
+        const playerTwoName = getPlayerTwoName()
+
+        if (playerOneName === '' || playerTwoName === '') return
+
+        p1NameHolder.textContent = getPlayerOneName()
+        p2NameHolder.textContent = getPlayerTwoName()
+        
+        render()
+        hideModal()
+    }
+
+    const hideModal = () => {
+        modal.style.display = 'none'
+        inputs.forEach(input => input.value  = '')
+    }
+    const showModal = () => modal.style.display = 'block'
 
     // bind events
     resetBtn.addEventListener('click', () => resetGame())
@@ -103,8 +136,8 @@ const Display = (() => {
     })
 
     const render = () => {
-        xScore.textContent = x.getPlayerScore()
-        oScore.textContent = o.getPlayerScore()
+        xScore.textContent = playerOne.getPlayerScore()
+        oScore.textContent = playerTwo.getPlayerScore()
         roundNum.textContent = roundNumber
         ties.textContent = tieNum
     }
@@ -126,8 +159,8 @@ const Display = (() => {
     }
 
     const getNextPlayer = () => {
-        if (isOver) activePlayer = x
-        activePlayer === x ? activePlayer = o : activePlayer = x
+        if (isOver) activePlayer = playerOne
+        activePlayer === playerOne ? activePlayer = playerTwo : activePlayer = playerOne
     }
 
     const updateBoard = (index) => {
@@ -153,9 +186,10 @@ const Display = (() => {
         tieNum = 0
         roundNumber = 1
         resetRound()
-        x.resetScore()
-        o.resetScore()
+        playerOne.resetScore()
+        playerTwo.resetScore()
         render()
+        showModal()
     }
 
     const resetRound = () => {
@@ -168,12 +202,11 @@ const Display = (() => {
     const updateScore = (winner) => {
         if (isOver) return
         if (winner === 'X') {
-            x.incrementScore()
-            xScore.textContent = x.getPlayerScore()
-            console.log(xScore.textContent = x.getPlayerScore())
+            playerOne.incrementScore()
+            xScore.textContent = playerOne.getPlayerScore()
         } else if (winner === 'O') {
-            o.incrementScore()
-            oScore.textContent = o.getPlayerScore()
+            playerTwo.incrementScore()
+            oScore.textContent = playerTwo.getPlayerScore()
         }
     }
 
