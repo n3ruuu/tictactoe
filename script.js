@@ -1,10 +1,11 @@
-const Player = (name, marker) => {
-    let playerScore = 0;
+const Player = (marker) => {
+    let playerScore = 0
     
-    const getPlayerScore = () => playerScore;
-    const incrementScore = () => playerScore++;
+    const getPlayerScore = () => playerScore
+    const incrementScore = () => playerScore++
+    const resetScore = () => playerScore = 0
 
-    return { name, marker, getPlayerScore, incrementScore }
+    return { marker, getPlayerScore, incrementScore, resetScore }
 }
 
 const Gameboard = (() => {
@@ -12,9 +13,9 @@ const Gameboard = (() => {
         ['', '', ''],
         ['', '', ''],
         ['', '', '']
-    ];
+    ]
 
-    const getBoard = () => boardArray;
+    const getBoard = () => boardArray
     
     const resetBoard = () => {
         boardArray = [
@@ -25,7 +26,7 @@ const Gameboard = (() => {
     }  
 
     const markBoard = (index, marker) => {
-        const [row, col] = index;
+        const [row, col] = index
         if ((row >= 0 && row < 3) && (col >= 0 && col < 3) && (boardArray[row][col] == '')) {
             boardArray[row][col] = marker 
             checkBoard()    
@@ -49,10 +50,11 @@ const Gameboard = (() => {
         ]
 
         for (let i = 0; i < patterns.length; i++) {
-            const line = patterns[i];
+            const line = patterns[i]
             if (line[0] !== '' && (line[0] === line[1]) && (line[0] === line[2])) {
-                console.log(`Winner: ${line[0]}`)
-                return;
+                Display.updateScore(line[0])
+                Display.setIsOver(true)
+                return
             }
         }
         console.table(getBoard()) 
@@ -65,5 +67,121 @@ const Gameboard = (() => {
 })()
 
 const Display = (() => {
+
+    const x = Player('X')
+    const o = Player('O')
+
+    let activePlayer = x
+    let isOver = false
+    let roundNumber = 1
+    let tieNum = 0
+
+    // cache DOM
+    const boxes = document.querySelectorAll('.box')
+    const roundNum = document.querySelector('.round-num')
+    const playerX = document.querySelector('.playerX')
+    const playerO = document.querySelector('.playerO')
+    const xScore = playerX.querySelector('.score')
+    const oScore = playerO.querySelector('.score')
+    const ties = document.querySelector('.ties .score')
+    const continueRoundBtn = document.querySelector('.continue-btn')
+    const resetBtn = document.querySelector('.reset-btn')
+
+    // bind events
+    resetBtn.addEventListener('click', () => resetGame())
+    continueRoundBtn.addEventListener('click', () => continueRound())
+
+    boxes.forEach((box) => {
+        box.addEventListener('click', (e) => {
+            let boxIndex = parseInt(e.target.dataset.index)   
+            let boxContent = e.target.textContent
+            if (boxContent !== '') return
+
+            playRound(boxIndex)
+            checkTie()
+        })
+    })
+
+    const render = () => {
+        xScore.textContent = x.getPlayerScore()
+        oScore.textContent = o.getPlayerScore()
+        roundNum.textContent = roundNumber
+        ties.textContent = tieNum
+    }
+
+    const playRound = (index) => {
+        if (isOver) return
+        let row = Math.floor(index / 3)
+        let col = index % 3
+        Gameboard.markBoard([row, col], activePlayer.marker)
+        updateBoard(index)
+    }
+
+    const checkTie = () => {
+        if (Array.from(boxes).every(box => box.textContent !== '')) {
+            incrementTie()
+            setIsOver(true)
+            render()
+        }
+    }
+
+    const getNextPlayer = () => {
+        if (isOver) activePlayer = x
+        activePlayer === x ? activePlayer = o : activePlayer = x
+    }
+
+    const updateBoard = (index) => {
+        boxes[index].textContent = activePlayer.marker
+        Gameboard.checkBoard()
+        getNextPlayer()
+    }
+
+    const clearBoard = () => {
+        for (let i = 0; i < 9; i++) {
+            boxes[i].textContent = ''
+        }
+    }
+
+    const continueRound = () => {
+        if (!isOver) return
+        roundNumber++
+        resetRound()
+        render()
+    }
+
+    const resetGame = () => {
+        tieNum = 0
+        roundNumber = 1
+        resetRound()
+        x.resetScore()
+        o.resetScore()
+        render()
+    }
+
+    const resetRound = () => {
+        Gameboard.resetBoard()
+        clearBoard()
+        setIsOver(false)
+        getNextPlayer()
+    }
+
+    const updateScore = (winner) => {
+        if (isOver) return
+        if (winner === 'X') {
+            x.incrementScore()
+            xScore.textContent = x.getPlayerScore()
+            console.log(xScore.textContent = x.getPlayerScore())
+        } else if (winner === 'O') {
+            o.incrementScore()
+            oScore.textContent = o.getPlayerScore()
+        }
+    }
+
+    const setIsOver = (state) => isOver = state
+    const incrementTie = () => tieNum++
+
+    render()
+
+    return { setIsOver, updateScore }
 
 })()

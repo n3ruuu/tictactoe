@@ -4,9 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tictactoe</title>
+    <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
 </head>
 <body>
-    
+    <header>Tictactoe</header>
+    <main>
+        <div id="gameboard">
+            <div class="box" data-index="0"></div>
+            <div class="box" data-index="1"></div>
+            <div class="box" data-index="2"></div>
+            <div class="box" data-index="3"></div>
+            <div class="box" data-index="4"></div>
+            <div class="box" data-index="5"></div>
+            <div class="box" data-index="6"></div>
+            <div class="box" data-index="7"></div>
+            <div class="box" data-index="8"></div>
+        </div>
+
+        <div id="round-text">Round <span class="round-num"></span></div>
+
+        <div id="scoreboard">
+            <div class="playerX"> 
+                <div class="text">Player X</div>
+                <div class="score">0</div>
+            </div>
+         
+            <div class="ties">
+                <div class="text">Ties</div>
+                <div class="score">0</div>
+            </div>
+
+            <div class="playerO">
+                <div class="text">Player O</div>
+                <div class="score">0</div>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button class="continue-btn">Continue Next Round</button>
+            <button class="reset-btn">Reset Game</button>
+        </div>
+
+    </main>
+    <footer>Created by: mustbeneru © <script>document.write( new Date().getFullYear() );</script></footer>
 </body>
 </html>

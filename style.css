@@ -1,0 +1,163 @@
+:root {
+	--header: 124px;
+	--footer: 40px;
+	--main: calc(100vh - calc(var(--header) + var(--footer)));
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #FFEAD0;;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    font-family: poppins, sans-serif;
+}
+
+header {
+    height: var(--header);
+    font-size: 3rem;
+    font-weight: bold;
+    background-color: #96616b;
+    width: 100%;
+    place-content: center;
+    color: #f0f3f5;
+}
+
+main {
+    height: var(--main);
+    display: flex;
+    flex-direction: column;
+}
+
+#gameboard {
+    margin-top: 48px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    width: 350px;
+    min-height: 350px;
+    gap: 1rem;
+}
+
+.box {
+    border: 1px solid black;
+    display: grid;
+    place-items: center;
+    font-size: 3rem;
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.5);
+    border-color: rgba(0, 0, 0, 0.656);
+    user-select: none;
+}
+
+#round-text {
+    background-color: #ecc8af;
+    border-radius: 1rem;
+    font-size: 1.5rem;
+    padding: 8px 0;
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.5);
+    width: 250px;
+    place-self: center;
+    margin: 20px;
+}
+
+#scoreboard {
+    background-color: #37505c;
+    border-radius: 1rem;
+    display: flex;
+    font-size: 1.2rem;
+    justify-content: space-between;
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.5);
+    color: #ffffff;
+    padding: 20px;
+}
+
+.buttons {
+    display: flex;
+    margin-top: 16px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.buttons button {
+    font-size: 1rem;
+    padding: 16px;
+    background: none;
+    width: fit-content;
+    color: black;
+    border-radius: 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.527);
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.423);
+}
+
+button:hover {
+    cursor: pointer;
+    border: none;
+    background: #7c931468;
+    font-size: 1rem;
+    border-radius: 1rem;
+    transition: all .7s ease; 
+}
+
+.box:hover {
+    border: none;
+    background-color: antiquewhite;
+}
+
+.footer {
+    height: var(--footer);
+    margin-top: 2rem;
+    bottom: 0;
+    text-align: center;
+    width: 100%;
+    padding: 10px;
+    font-size: 15px;
+}
+
+#modal {
+    position: absolute;
+    background-color: #96616bea;
+    width: 400px;
+    top: 20%;
+    font-size: 1.5rem;
+    border-radius: 8px;
+    align-self: center;
+}
+
+fieldset {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    border: none;
+    text-align: center;
+    padding: 25px;
+    margin: 20px;
+}
+
+input,
+.confirm-btn {
+    height: 60px;
+    width: 80%;
+    padding: 20px;
+    border-radius: 8px;
+    font-family: inherit;
+    border: none;
+    font-size: 1.2rem;
+    place-content: center;
+}
+
+legend {
+    color: #ffffff;
+    font-size: 2rem;
+    font-weight: bold;
+}
