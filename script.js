@@ -4,9 +4,8 @@ const Player = (name, marker) => {
     const getPlayerScore = () => playerScore
     const incrementScore = () => playerScore++
     const resetScore = () => playerScore = 0
-    const getPlayerName = () => name
 
-    return { getPlayerName, name, marker, getPlayerScore, incrementScore, resetScore }
+    return { name, marker, getPlayerScore, incrementScore, resetScore }
 }
 
 const Gameboard = (() => {
@@ -80,7 +79,6 @@ const Display = (() => {
     let roundNumber = 1
     let tieNum = 0
 
-
     // cache DOM
     const boxes = document.querySelectorAll('.box')
     const roundNum = document.querySelector('.round-num')
@@ -97,33 +95,10 @@ const Display = (() => {
     const modal = document.querySelector('#modal')
     const inputs = document.querySelectorAll('input')
 
-    confirmBtn.addEventListener('click', (e) => addPlayers(e))
-
-    const addPlayers = (e) => {
-        e.preventDefault()
-
-        const playerOneName = getPlayerOneName()
-        const playerTwoName = getPlayerTwoName()
-
-        if (playerOneName === '' || playerTwoName === '') return
-
-        p1NameHolder.textContent = getPlayerOneName()
-        p2NameHolder.textContent = getPlayerTwoName()
-        
-        render()
-        hideModal()
-    }
-
-    const hideModal = () => {
-        modal.style.display = 'none'
-        inputs.forEach(input => input.value  = '')
-    }
-    const showModal = () => modal.style.display = 'block'
-
     // bind events
+    confirmBtn.addEventListener('click', (e) => addPlayers(e))
     resetBtn.addEventListener('click', () => resetGame())
     continueRoundBtn.addEventListener('click', () => continueRound())
-
     boxes.forEach((box) => {
         box.addEventListener('click', (e) => {
             let boxIndex = parseInt(e.target.dataset.index)   
@@ -140,6 +115,21 @@ const Display = (() => {
         oScore.textContent = playerTwo.getPlayerScore()
         roundNum.textContent = roundNumber
         ties.textContent = tieNum
+    }
+
+    const addPlayers = (e) => {
+        e.preventDefault()
+
+        const playerOneName = getPlayerOneName()
+        const playerTwoName = getPlayerTwoName()
+
+        if (playerOneName === '' || playerTwoName === '') return
+
+        p1NameHolder.textContent = getPlayerOneName()
+        p2NameHolder.textContent = getPlayerTwoName()
+        
+        render()
+        hideModal()
     }
 
     const playRound = (index) => {
@@ -162,6 +152,13 @@ const Display = (() => {
         if (isOver) activePlayer = playerOne
         activePlayer === playerOne ? activePlayer = playerTwo : activePlayer = playerOne
     }
+
+    const hideModal = () => {
+        modal.style.display = 'none'
+        inputs.forEach(input => input.value  = '')
+    }
+
+    const showModal = () => modal.style.display = 'block'
 
     const updateBoard = (index) => {
         boxes[index].textContent = activePlayer.marker
